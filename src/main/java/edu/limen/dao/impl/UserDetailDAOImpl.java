@@ -25,7 +25,7 @@ public class UserDetailDAOImpl implements IUserDetailDAO {
 	@Override
 	public List<UserDetail> listUserDetail() {
 		// TODO Auto-generated method stub
-		return sessionFactory.getCurrentSession().createQuery("from user_detail where status = 1").list();
+		return sessionFactory.getCurrentSession().createQuery("from UserDetail where status = 1 and deviceID>0").list();
 	}
 
 	@Override

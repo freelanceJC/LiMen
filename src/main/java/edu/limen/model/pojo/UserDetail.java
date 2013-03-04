@@ -2,12 +2,17 @@ package edu.limen.model.pojo;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -48,7 +53,23 @@ public class UserDetail {
 	
 	@Column(name="STATUS", nullable=false)
 	private byte status = 1;
-		
+	
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_fan",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = @JoinColumn(name = "fan_user_id")
+    )
+    private List<UserDetail> userFanList;
+	
+	public List<UserDetail> getUserFanList() {
+		return userFanList;
+	}
+
+	public void setUserFanList(List<UserDetail> userFanList) {
+		this.userFanList = userFanList;
+	}
+
 	public int getId() {
 		return id;
 	}
