@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+	<session-factory>
+		<mapping class="edu.limen.model.pojo.User" />
+		<mapping class="edu.limen.model.pojo.School" />
+		<mapping class="edu.limen.model.pojo.Device"/>
+		<mapping class="edu.limen.model.pojo.Event"/>
+		<mapping class="edu.limen.model.pojo.Group"/>
+		<mapping class="edu.limen.model.pojo.MMGroup"/>
+		<mapping class="edu.limen.model.pojo.UserDetail"/>
+		<mapping class="edu.limen.model.pojo.UserGrouping"/>
+		<mapping class="edu.limen.model.pojo.UserMessage"/>
+		<mapping class="edu.limen.model.pojo.UserMMGrouping"/>
+		<mapping class="edu.limen.model.pojo.UserMMGroupingPlan"/>
+		<mapping class="edu.limen.model.pojo.UserNotification"/>
+		<mapping class="edu.limen.model.view.SchoolUserView"/>
+	</session-factory>
+
+</hibernate-configuration>
