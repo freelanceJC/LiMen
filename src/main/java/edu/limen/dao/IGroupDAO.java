@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.limen.model.pojo.Event;
 import edu.limen.model.pojo.Group;
+import edu.limen.model.pojo.User;
 
 
 public interface IGroupDAO {

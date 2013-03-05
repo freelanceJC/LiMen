@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="USER_DETAIL")
+@Table(name="user_detail")
 public class UserDetail {
 
 	@Id
@@ -38,6 +38,9 @@ public class UserDetail {
 	
 	@Column(name="PHOTO", length=255)
 	private String photo;
+	
+	@Column(name="EMAIL_ADDRESS", length=100)
+	private String emailAddress;
 	
 	@Column(name="DEVICE_ID", length=10)
 	private int deviceID;
@@ -124,6 +127,14 @@ public class UserDetail {
 
 	public void setDeviceID(int deviceID) {
 		this.deviceID = deviceID;
+	}
+	
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 	public String getOpenfireID() {

@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import edu.limen.dao.IUserMessageDAO;
 import edu.limen.model.pojo.UserMessage;
 
+@Repository
 public class UserMessageDAOImpl implements IUserMessageDAO {
 
 	@Autowired
@@ -16,6 +18,7 @@ public class UserMessageDAOImpl implements IUserMessageDAO {
 	@Override
 	public void addUserMessage(UserMessage usermessage) {
 		// TODO Auto-generated method stub
+		System.out.println(usermessage.getContent());
 		sessionFactory.getCurrentSession().save(usermessage);
 	}
 

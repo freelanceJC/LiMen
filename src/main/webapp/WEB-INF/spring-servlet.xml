@@ -40,6 +40,7 @@
 	<bean class ="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
  
 	<bean id="userService" class="edu.limen.service.impl.UserServiceImpl" />
+	<bean id="messageService" class="edu.limen.service.impl.MessageServiceImpl" />
 	<bean id="groupService" class="edu.limen.service.impl.GroupServiceImpl" />
 	<bean id="schoolUserService" class="edu.limen.service.impl.SchoolUserServiceImpl" />
 

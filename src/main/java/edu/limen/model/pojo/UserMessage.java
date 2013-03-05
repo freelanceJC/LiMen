@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="USER_MESSAGE")
+@Table(name="user_message")
 public class UserMessage {
 	
 	@Id
@@ -19,18 +19,24 @@ public class UserMessage {
 	private int fromUserID;
 	
 	@Column(name="FROM_GROUPING_ID", length=10)
-	private int fromGroupingID;
+	private Integer fromGroupingID;
 	
 	@Column(name="TO_USER_ID", nullable=false, length=10)
 	private int toUserID;
 	
+	@Column(name="TITLE")
+	private String title;
+	
 	@Column(name="CONTENT", nullable=false)
 	private String content;
 	
-	@Column(name="SCHEDULE_TIME")
-	private Timestamp scheduleTime;
+	@Column(name="START_TIME")
+	private Timestamp startTime;
 	
-	@Column(name="CREATE_TIME", nullable=false)
+	@Column(name="END_TIME")
+	private Timestamp endTime;
+	
+	@Column(name="CREATE_TIME")
 	private Timestamp createTime;
 	
 	@Column(name="STATUS")
@@ -56,7 +62,7 @@ public class UserMessage {
 		return fromGroupingID;
 	}
 
-	public void setFromGroupingID(int fromGroupingID) {
+	public void setFromGroupingID(Integer fromGroupingID) {
 		this.fromGroupingID = fromGroupingID;
 	}
 
@@ -68,6 +74,14 @@ public class UserMessage {
 		this.toUserID = toUserID;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public String getContent() {
 		return content;
 	}
@@ -75,13 +89,21 @@ public class UserMessage {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
-	public Timestamp getScheduleTime() {
-		return scheduleTime;
+	
+	public Timestamp getStartTime() {
+		return startTime;
 	}
 
-	public void setScheduleTime(Timestamp scheduleTime) {
-		this.scheduleTime = scheduleTime;
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 
 	public Timestamp getCreateTime() {

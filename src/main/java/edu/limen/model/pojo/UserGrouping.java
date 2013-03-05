@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="USER_GROUPING")
+@Table(name="user_grouping")
 public class UserGrouping {
 
 	@Id
@@ -29,4 +29,30 @@ public class UserGrouping {
 	
 	@Column(name="STATUS", nullable=false)
 	private byte status;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+
+	public int getGroupingID() {
+		return groupingID;
+	}
+
+	public void setGroupingID(int groupingID) {
+		this.groupingID = groupingID;
+	}
+	
+	
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.limen.dao.IGroupDAO;
 import edu.limen.model.pojo.Group;
+import edu.limen.model.pojo.User;
 import edu.limen.service.IGroupService;
 
 @Service
@@ -46,5 +47,5 @@ public class GroupServiceImpl implements IGroupService{
 	public void blockMember(String[] uid){
 		groupDao.blockMember(uid);
 	}
-
+	
 }
