@@ -11,13 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.limen.dao.IGroupDAO;
 import edu.limen.dao.IUserDetailDAO;
-import edu.limen.dao.IUserFanDAO;
 import edu.limen.dao.IUserGroupingDAO;
 import edu.limen.model.json.UserFanDetailItem;
 import edu.limen.model.json.UserFanListItem;
 import edu.limen.model.pojo.Group;
 import edu.limen.model.pojo.UserDetail;
-import edu.limen.model.pojo.UserFan;
 import edu.limen.model.pojo.UserGrouping;
 import edu.limen.service.IFanService;
 
@@ -26,9 +24,6 @@ public class FanServiceImpl implements IFanService {
 	
 	@Autowired
 	private IUserDetailDAO userDetailDao;
-
-	@Autowired
-	private IUserFanDAO userFanDao;
 	
 	@Autowired
 	private IUserGroupingDAO userGroupingDao;
@@ -41,13 +36,15 @@ public class FanServiceImpl implements IFanService {
 	public List<UserFanListItem> listUserFan(Integer userId) {
 		List<UserFanListItem> userFanList = new ArrayList<UserFanListItem>();
 		UserGrouping userGrouping = userGroupingDao.listFriendListGroup(userId);
+		if (userGrouping != null) {
 			for (UserDetail user : userGrouping.getGroup().getGroupUsers()) {
 				if (user.getId() != userId) {
 					UserGrouping group = userGroupingDao.getUserGroupingByGroupingIdAndUserId(userGrouping.getGroup().getUid(), user.getId());
 					byte fanStatus = group != null ? group.getStatus() : 0;
 					userFanList.add(new UserFanListItem(user.getId(), user.getRealNameString(), fanStatus));
 				}
-			}			
+			}	
+		}
 		return userFanList;
 	}	
 
@@ -66,86 +63,73 @@ public class FanServiceImpl implements IFanService {
 		}
 		return userFanDetailItem;
 	}
+	
+	private UserGrouping createFriendListGroupWithOwnerUserId(UserDetail user) {
+		UserGrouping userGrouping = new UserGrouping();
+		Group group = new Group();
+		group.setName("Friend List");
+		group.setStatus(129);
+		group.setCreateTime(new Timestamp((new Date()).getTime()));
+		groupDao.addGroup(group);
+		
+		userGrouping.setGroup(group);
+		userGrouping.setUserDetail(user);
+		userGrouping.setCreateTime(new Timestamp((new Date()).getTime()));
+		userGrouping.setStatus((byte)8);
+		userGroupingDao.addUserGrouping(userGrouping);
+		return userGrouping;
+	}
+	
+	private void addFriendMember(Group group, UserDetail user, byte status) {
+		UserGrouping userGrouping = new UserGrouping();
+		userGrouping.setGroup(group);
+		userGrouping.setUserDetail(user);
+		userGrouping.setCreateTime(new Timestamp((new Date()).getTime()));
+		userGrouping.setStatus((byte)status);
+		userGroupingDao.addUserGrouping(userGrouping);
+	}
 
 	@Override
 	@Transactional
-	public void addFans(Integer userId, List<String> fanUserIds) {
+	public void addFans(Integer userId, List<Integer> fanUserIds) {
 		UserGrouping userGrouping = userGroupingDao.listFriendListGroup(userId);
+		UserDetail creatorUserDetail = userDetailDao.listActiveUserDetailByUserId(userId);
 		if (userGrouping == null) {
-			userGrouping = new UserGrouping();
-			Group group = new Group();
-			group.setName("Friend List");
-			group.setStatus(129);
-			group.setCreateTime(new Timestamp((new Date()).getTime()));
-			groupDao.addGroup(group);
-			
-			UserDetail userDetail = userDetailDao.listActiveUserDetailByUserId(userId);
-			
-			userGrouping.setGroup(group);
-			userGrouping.setUserDetail(userDetail);
-			userGrouping.setCreateTime(new Timestamp((new Date()).getTime()));
-			userGrouping.setStatus((byte)8);
-			userGroupingDao.addUserGrouping(userGrouping);
+			userGrouping = this.createFriendListGroupWithOwnerUserId(creatorUserDetail);
 		}
 		
-		for (String newFanId : fanUserIds) {
+		for (Integer newFanId : fanUserIds) {
 			
-			UserDetail userDetail = userDetailDao.listActiveUserDetailByUserId(Integer.parseInt(newFanId));
-			if (userDetail != null) {
-				UserGrouping userGroupingMember = new UserGrouping();
-				userGroupingMember.setGroup(userGrouping.getGroup());
-				userGroupingMember.setUserDetail(userDetail);
-				userGroupingMember.setCreateTime(new Timestamp((new Date()).getTime()));
-				userGroupingMember.setStatus((byte)0);
-				
-				UserGrouping fanGroupFriendList = userGroupingDao.listFriendListGroup(Integer.parseInt(newFanId));
+			UserDetail fanUserDetail = userDetailDao.listActiveUserDetailByUserId(newFanId);
+			
+			if (fanUserDetail != null) {
+				// add new fan into owner list
+				if (userGroupingDao.getUserGroupingByGroupingIdAndUserId(userGrouping.getGroup().getUid(), newFanId) == null) {
+					this.addFriendMember(userGrouping.getGroup(), fanUserDetail, (byte)1);
+				}
+								
+				UserGrouping fanGroupFriendList = userGroupingDao.listFriendListGroup(newFanId);
 				if (fanGroupFriendList == null) {
 					// if frield list is null, create an new one for him
-					
+					fanGroupFriendList = this.createFriendListGroupWithOwnerUserId(fanUserDetail);
 				}
 				//update the fan user grouping status to byte 1 - invited
-				
-				
+				if (userGroupingDao.getUserGroupingByGroupingIdAndUserId(fanGroupFriendList.getGroup().getUid(), userId) == null) {
+					this.addFriendMember(fanGroupFriendList.getGroup(), creatorUserDetail, (byte)0);
+				}				
 			}
 			
-			
 		}
-		
-//		UserDetail userDetail = userDetailDao.listActiveUserDetailByUserId(userId);
-//		if (userDetail != null) {
-//			for (String newFanId : fanUserIds) {
-//			
-//				UserFan userFan = userFanDao.getFan(userId, Integer.parseInt(newFanId));
-//				if (userFan == null) {
-//					userFan = new UserFan();
-//					userFan.setUserId(userId);
-//					userFan.setFanUserId(Integer.parseInt(newFanId));
-//					userFan.setCreateTime(new Timestamp((new Date()).getTime()));
-//					userFan.setStatus((byte)0);
-//					userFanDao.addFan(userFan);
-//				}
-//				
-//				UserFan userFanReverse = userFanDao.getFan(Integer.parseInt(newFanId), userId);
-//				if (userFanReverse == null) {
-//					userFanReverse = new UserFan();
-//					userFanReverse.setUserId(Integer.parseInt(newFanId));
-//					userFanReverse.setFanUserId(userId);
-//					userFanReverse.setCreateTime(new Timestamp((new Date()).getTime()));
-//					userFanReverse.setStatus((byte)0);
-//					userFanDao.addFan(userFanReverse);
-//				}
-//			}			
-//		}
 	}
 	
 	@Override
 	@Transactional
-	public void removeFans(Integer userId, List<String> fanUserIds) {
+	public void removeFans(Integer userId, List<Integer> fanUserIds) {
 		UserGrouping userGrouping = userGroupingDao.listFriendListGroup(userId);
 		if (userGrouping != null) {
-			for (String fanId : fanUserIds) {
+			for (Integer fanId : fanUserIds) {
 				UserGrouping group = userGroupingDao.getUserGroupingByGroupingIdAndUserId(
-						userGrouping.getGroup().getUid(), Integer.parseInt(fanId));
+						userGrouping.getGroup().getUid(), fanId);
 				if (group != null) {
 					userGroupingDao.removeUserGrouping(group);
 				}
@@ -156,11 +140,11 @@ public class FanServiceImpl implements IFanService {
 	
 	@Override
 	@Transactional
-	public void updateFansStatus(Integer userId, List<String> fanUserIds, int status) {
+	public void updateFansStatus(Integer userId, List<Integer> fanUserIds, int status) {
 		UserGrouping userGrouping = userGroupingDao.listFriendListGroup(userId);
-		for (String fanId : fanUserIds) {
+		for (Integer fanId : fanUserIds) {
 			UserGrouping group = userGroupingDao.getUserGroupingByGroupingIdAndUserId(
-					userGrouping.getGroup().getUid(), Integer.parseInt(fanId));
+					userGrouping.getGroup().getUid(), fanId);
 			if (group != null) {
 				group.setStatus((byte)status);
 				userGroupingDao.updateUserGrouping(group);

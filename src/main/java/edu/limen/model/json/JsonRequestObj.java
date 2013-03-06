@@ -13,7 +13,7 @@ public class JsonRequestObj implements Serializable {
 	private String type;
 	private String input;
 	private Integer userId;
-	private List<String> userIdList = new ArrayList<String>();
+	private List<Integer> userIdList = new ArrayList<Integer>();
 	private String status;
 
 	public String getType() {
@@ -40,11 +40,11 @@ public class JsonRequestObj implements Serializable {
 		this.userId = userId;
 	}
 
-	public List<String> getUserIdList() {
+	public List<Integer> getUserIdList() {
 		return userIdList;
 	}
 
-	public void setUserIdList(List<String> userIdList) {
+	public void setUserIdList(List<Integer> userIdList) {
 		this.userIdList = userIdList;
 	}
 

@@ -13,7 +13,6 @@
 		<mapping class="edu.limen.model.pojo.Group"/>
 		<mapping class="edu.limen.model.pojo.MMGroup"/>
 		<mapping class="edu.limen.model.pojo.UserDetail"/>
-		<mapping class="edu.limen.model.pojo.UserFan"/>
 		<mapping class="edu.limen.model.pojo.UserGrouping"/>
 		<mapping class="edu.limen.model.pojo.UserMessage"/>
 		<mapping class="edu.limen.model.pojo.UserMMGrouping"/>
