@@ -12,6 +12,19 @@ public class UserFanListItem implements Serializable {
 	private Integer fanUserId;
 	
 	private String fanRealName;
+	
+	private byte fanStatus;
+
+	public UserFanListItem() {
+		
+	}
+	
+	public UserFanListItem(Integer fanUserId, String fanRealName, byte fanStatus) {
+		super();
+		this.fanUserId = fanUserId;
+		this.fanRealName = fanRealName;
+		this.fanStatus = fanStatus;
+	}
 
 	public Integer getFanUserId() {
 		return fanUserId;
@@ -29,10 +42,12 @@ public class UserFanListItem implements Serializable {
 		this.fanRealName = fanRealName;
 	}
 
-	@Override
-	public String toString() {
-		return "UserFanListing [fanUserId=" + fanUserId + ", fanRealName="
-				+ fanRealName + "]";
+	public byte getFanStatus() {
+		return fanStatus;
+	}
+
+	public void setFanStatus(byte fanStatus) {
+		this.fanStatus = fanStatus;
 	}
 	
 }

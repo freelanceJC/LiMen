@@ -11,4 +11,7 @@ public interface IUserDetailDAO {
 	public List<UserDetail> listUserDetail();
 	
 	public void removeUserDetail(Integer id);
+
+	public UserDetail listActiveUserDetailByUserId(Integer userId);
+
 }

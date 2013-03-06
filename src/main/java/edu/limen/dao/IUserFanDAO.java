@@ -1,18 +1,15 @@
 package edu.limen.dao;
 
-import java.util.List;
-
-import edu.limen.model.json.UserFanListItem;
+import edu.limen.model.pojo.UserFan;
 
 
 public interface IUserFanDAO {
 	
 	
-	public List<UserFanListItem> listUserFan(String myUserId);
-//public void addGroup(Group group);
-//	public List<Group> listGroup();
-//	public List<Group> listGroup(String key);
-//	public List<Group> listGroupByUser(String uid);
-//	public List<Group>	listGroupBySearch(String[] keywords);
+//	public List<UserFanListItem> listUserFan(String myUserId);
+	public UserFan getFan(Integer userId, Integer fanUserId);
+	public void addFan(UserFan userFan);
+	public void updateFan(UserFan userFan);
+	public void removeFan(UserFan userFan);
 
 }

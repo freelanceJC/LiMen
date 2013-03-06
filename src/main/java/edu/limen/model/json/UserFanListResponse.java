@@ -13,7 +13,7 @@ public class UserFanListResponse implements Serializable {
 	private List<UserFanListItem> userFanList;
 	
 	public UserFanListResponse () {
-		userFanList = new ArrayList<>();
+		userFanList = new ArrayList<UserFanListItem>();
 	}
 	
 	public List<UserFanListItem> getUserFanList() {

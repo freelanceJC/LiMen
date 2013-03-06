@@ -1,18 +1,29 @@
 package edu.limen.model.pojo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="grouping")
-public class Group {
+public class Group implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6679452654079802899L;
+
 	@Id
 	@Column(name="id", length=10)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -35,7 +46,23 @@ public class Group {
 	
 	@Column(name="status", nullable=false)
 	private int status;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "user_grouping", 
+			joinColumns = { @JoinColumn(name = "grouping_id") }, 
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
+	private List<UserDetail> groupUsers;
 
+	public List<UserDetail> getGroupUsers() {
+		return groupUsers;
+	}
+
+	public void setGroupUsers(List<UserDetail> groupUsers) {
+		this.groupUsers = groupUsers;
+	}
+	
 	public Integer getUid() {
 		return id;
 	}

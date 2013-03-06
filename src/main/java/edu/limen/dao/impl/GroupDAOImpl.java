@@ -10,6 +10,7 @@ import edu.limen.dao.IGroupDAO;
 import edu.limen.model.pojo.Event;
 import edu.limen.model.pojo.Group;
 import edu.limen.model.pojo.User;
+import edu.limen.model.pojo.UserDetail;
 @Repository
 public class GroupDAOImpl implements IGroupDAO {
 
@@ -18,6 +19,8 @@ public class GroupDAOImpl implements IGroupDAO {
 
 	@Override
 	public void addGroup(Group group) {
+		@SuppressWarnings("unused")
+		Integer abc = (Integer) sessionFactory.getCurrentSession().save(group);
 		sessionFactory.getCurrentSession().save(group);
 
 	}
@@ -116,6 +119,16 @@ public class GroupDAOImpl implements IGroupDAO {
 	public void addResourse() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserDetail> listUsersByGroupId(Integer groupingId) {
+		List<Group> groupList = sessionFactory.getCurrentSession()
+				.createQuery("from Group g inner join g.groupUsers gu where g.id = :gid order by gu.realNameString")
+				.setInteger("gid", groupingId).list();
+		
+		return groupList.isEmpty() ? null : groupList.get(0).getGroupUsers();
 	}
 
 }
