@@ -89,7 +89,7 @@ public class FanController {
 			fanService.updateFansStatus(
 					requestObj.getUserId(),
 					requestObj.getUserIdList(),
-					Integer.parseInt(requestObj.getStatus()));
+					requestObj.getStatus());
 			jsonResponse.setResponseStatus("success");
 		}
 		

@@ -14,7 +14,7 @@ public class JsonRequestObj implements Serializable {
 	private String input;
 	private Integer userId;
 	private List<Integer> userIdList = new ArrayList<Integer>();
-	private String status;
+	private Integer status;
 
 	public String getType() {
 		return type;
@@ -48,11 +48,11 @@ public class JsonRequestObj implements Serializable {
 		this.userIdList = userIdList;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 }
