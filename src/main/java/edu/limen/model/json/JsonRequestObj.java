@@ -1,6 +1,8 @@
 package edu.limen.model.json;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonRequestObj implements Serializable {
 
@@ -8,27 +10,11 @@ public class JsonRequestObj implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6460473647358567350L;
-	private String id;
-	private String test;
 	private String type;
 	private String input;
 	private Integer userId;
-	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getTest() {
-		return test;
-	}
-
-	public void setTest(String test) {
-		this.test = test;
-	}
+	private List<String> userIdList = new ArrayList<String>();
+	private String status;
 
 	public String getType() {
 		return type;
@@ -52,5 +38,21 @@ public class JsonRequestObj implements Serializable {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public List<String> getUserIdList() {
+		return userIdList;
+	}
+
+	public void setUserIdList(List<String> userIdList) {
+		this.userIdList = userIdList;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

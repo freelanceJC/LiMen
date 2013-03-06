@@ -4,11 +4,11 @@ import java.util.List;
 
 import edu.limen.model.pojo.Event;
 import edu.limen.model.pojo.Group;
-import edu.limen.model.pojo.User;
+import edu.limen.model.pojo.UserDetail;
 
 
 public interface IGroupDAO {
-public void addGroup(Group group);
+	public void addGroup(Group group);
 	public List<Group> listGroup();
 	public List<Group> listGroup(String key);
 	public List<Group> listGroupByUser(String uid);
@@ -25,4 +25,6 @@ public void addGroup(Group group);
 	public void leaveGroup(String uid);
 	public void addResourse();
 	public void removeGroup(int id);
+	
+	public List<UserDetail> listUsersByGroupId(Integer groupingId);
 }
