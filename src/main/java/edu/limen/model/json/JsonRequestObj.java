@@ -11,7 +11,7 @@ public class JsonRequestObj implements Serializable {
 	 */
 	private static final long serialVersionUID = -6460473647358567350L;
 	private String type;
-	private String input;
+	private String keyword;
 	private Integer userId;
 	private List<Integer> userIdList = new ArrayList<Integer>();
 	private Integer status;
@@ -24,12 +24,12 @@ public class JsonRequestObj implements Serializable {
 		this.type = type;
 	}
 
-	public String getInput() {
-		return input;
+	public String getKeyword() {
+		return keyword;
 	}
 
-	public void setInput(String input) {
-		this.input = input;
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 	public Integer getUserId() {

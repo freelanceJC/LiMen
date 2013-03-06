@@ -36,13 +36,13 @@ public class UserController {
 	public List<User> search(@RequestBody JsonRequestObj requestObj)
 	{
 		String searchType = requestObj.getType();
-		String searchInput = requestObj.getInput();
+		String searchInput = requestObj.getKeyword();
 		Integer userId = requestObj.getUserId();
-		if (searchInput == null || searchType == null){
+		if (searchInput == null || searchType == null || "".equals(searchInput)){
 			return new ArrayList<User>();
 		}
 		switch (searchType) {
-			case "username":
+			case "user":
 				return userService.searchUserByUserName(searchInput);
 			case "group":
 				if (userId == null) {

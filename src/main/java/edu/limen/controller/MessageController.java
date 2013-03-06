@@ -24,6 +24,7 @@ import edu.limen.model.json.UserFanListItem;
 import edu.limen.model.json.UserFanListResponse;
 import edu.limen.model.pojo.User;
 import edu.limen.model.pojo.UserDetail;
+import edu.limen.model.pojo.UserGrouping;
 import edu.limen.model.pojo.UserMessage;
 import edu.limen.service.IFanService;
 import edu.limen.service.IGroupService;
@@ -41,67 +42,34 @@ public class MessageController {
 	IMessageService messageService;
 
 	
-	@RequestMapping(value="/send", method = RequestMethod.POST)
+	@RequestMapping(value="/sendAddFriendMessage", method = RequestMethod.POST)
 	@ResponseBody
 	public MessageResponseObj send(@RequestBody MessageRequestObj msgRequestObj)
 	{
 		MessageResponseObj response = new MessageResponseObj();
-		Integer userId = msgRequestObj.getUserId();
+		Integer fromUserId = msgRequestObj.getFromUserId();
+		Integer toUserId = msgRequestObj.getTargetId();
 		String content = msgRequestObj.getContent();
-		String title = msgRequestObj.getTitle();
-		String dateFormatString = "yyyy-MM-dd HH:mm:ss";
-		SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
-		Timestamp startTime;
-		Timestamp endTime;
-		try {
-			startTime = new Timestamp(sdf.parse(msgRequestObj.getStartTime()).getTime());
-			endTime = new Timestamp(sdf.parse(msgRequestObj.getEndTime()).getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			response.setDescription("You don't own this group");
-			response.setResultCode("999");
+	
+		if (fromUserId == null || toUserId == null) {
+			response.setDescription("INVALID_INPUT");
+			response.setResultCode("10001");
 			return response;
 		}
 		
-		Integer targetId = msgRequestObj.getTargetId();
-		String targetType = msgRequestObj.getTargetType();
-		UserMessage userMessage = null;
-		
-		switch (targetType) {
-			case "group":
-				List<User> uList = userService.getUserByGroupIdUserId(targetId, userId);
-				if (uList == null || uList.size() == 0 ) {
-					response.setDescription("You dont own this group");
-					response.setResultCode("999");
-					return response;
-				}
-				for (User user : uList) {
-					userMessage = new UserMessage();
-					userMessage.setContent(content);
-					userMessage.setTitle(title);
-					userMessage.setStartTime(startTime);
-					userMessage.setEndTime(endTime);
-					userMessage.setFromGroupingID(targetId);
-					userMessage.setFromUserID(userId);
-					userMessage.setToUserID(user.getId());
-					userMessage.setStatus(new Integer(4).byteValue());
-					messageService.addUserMessage(userMessage);
-				}
-				break;
-			case "user":
-				userMessage = new UserMessage();
-				userMessage.setContent(content);
-				userMessage.setTitle(title);
-				userMessage.setStartTime(startTime);
-				userMessage.setEndTime(endTime);
-				userMessage.setFromUserID(userId);
-				userMessage.setToUserID(targetId);
-				userMessage.setStatus(new Integer(4).byteValue());
-				messageService.addUserMessage(userMessage);
-				break;
-			default:
+		if (!messageService.canSendFriendMessage(fromUserId, toUserId)){
+			response.setDescription("TARGET_NOT_IN_PENDING_FD_LIST");
+			response.setResultCode("90001");
+			return response;
 		}
+		
+		UserMessage userMessage = new UserMessage();
+		userMessage.setContent(content);
+		userMessage.setFromUserID(fromUserId);
+		userMessage.setToUserID(toUserId);
+		userMessage.setStatus(new Integer(0).byteValue());
+		messageService.addUserMessage(userMessage);
+
 		response.setDescription("Success");
 		response.setResultCode("200");
 		return response;

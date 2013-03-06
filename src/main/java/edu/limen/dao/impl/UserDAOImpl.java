@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import edu.limen.dao.IUserDAO;
 import edu.limen.model.pojo.User;
-import edu.limen.model.pojo.UserDetail;
 
 @Repository
 public class UserDAOImpl implements IUserDAO {
@@ -66,7 +65,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<User> searchUserByUserName(String userName) {
 		// TODO Auto-generated method stub
 		if(userName != null)
-			return sessionFactory.getCurrentSession().createQuery("from User as u where u.userName like :userName and u.id in (select ud.id from UserDetail as ud where ud.status in (1,3,5))").setString("userName", "%"+userName+"%").list();
+			return sessionFactory.getCurrentSession().createQuery("select new User(u.id, u.userName) from User as u where u.userName like :userName and u.id in (select ud.id from UserDetail as ud where ud.status in (1,3,5))").setString("userName", "%"+userName+"%").list();
 		return null;
 	}
 
@@ -75,7 +74,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<User> searchUserByEmail(String email) {
 		// TODO Auto-generated method stub
 		if(email != null)
-			return sessionFactory.getCurrentSession().createQuery("from User as u where u.id in (select ud.id from UserDetail as ud where ud.status in (1,3,5) and ud.emailAddress like :email)").setString("email", "%"+email+"%").list();
+			return sessionFactory.getCurrentSession().createQuery("select new User(u.id, u.userName) from User as u where u.id in (select ud.id from UserDetail as ud where ud.status in (1,3,5) and ud.emailAddress like :email)").setString("email", "%"+email+"%").list();
 		return null;
 	}
 
@@ -84,9 +83,24 @@ public class UserDAOImpl implements IUserDAO {
 	public List<User> searchUserByGroupName(String groupName, Integer userId){
 		if (groupName != null) {
 			return sessionFactory.getCurrentSession().createQuery(
-					"from User as u where u.id in " +
-							"(select ug.userID from UserGrouping as ug where ug.status in (2,8) and (ug.groupingID in (select g1.id from Group as g1 where g1.status in (3,5) AND g1.name like :groupName)" +
-							" OR ug.groupingID in (select ug3.groupingID from UserGrouping as ug3 where ug3.userID = :uid and ug3.groupingID in (select g2.id from Group as g2 where g2.status = 1 AND g2.name like :groupName))))").setInteger("uid",userId).setString("groupName","%"+groupName+"%").list();
+					"select new User(u.id, u.userName) from User as u where u.id in " +
+							"(select ug.userDetail.id from UserGrouping as ug " +
+							"where ug.status in (2,4,8) " +
+							"and (ug.group.id in " +
+									"(select g1.id from Group as g1 " +
+									"where g1.status in (3,5) " +
+									"AND g1.name like :groupName)" +
+								" OR ug.group.id in " +
+									"(select ug3.group.id from UserGrouping as ug3 " +
+									"where ug3.userDetail.id = :uid " +
+									"and ug3.group.id in " +
+										"(select g2.id from Group as g2 " +
+										"where g2.status = 1 " +
+										"AND g2.name like :groupName" +
+										")" +
+									")" +
+								")" +
+							")").setInteger("uid",userId).setString("groupName","%"+groupName+"%").list();
 		}
 		return null;
 	}
@@ -97,7 +111,7 @@ public class UserDAOImpl implements IUserDAO {
 		if (groupId != null && userId != null) {
 			return sessionFactory.getCurrentSession().createQuery(
 					"from User as u where u.id in " +
-							"(select ug.userID from UserGrouping as ug where ug.groupingID = (select ug1.groupingID from UserGrouping ug1 where ug1.status = 8 and ug1.groupingID = :groupId and ug1.userID = :uid))").setInteger("uid",userId).setInteger("groupId",groupId).list();
+							"(select ug.userDetail.id from UserGrouping as ug where ug.group.id = (select ug1.group.id from UserGrouping ug1 where ug1.status = 8 and ug1.group.id = :groupId and ug1.userID = :uid))").setInteger("uid",userId).setInteger("groupId",groupId).list();
 		}
 		return null;
 		

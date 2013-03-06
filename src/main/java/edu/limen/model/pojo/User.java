@@ -33,6 +33,11 @@ public class User {
 	@Column(name="STATUS", nullable=false)
 	private byte status; 
 	
+	public User(Integer id, String userName) {
+		this.id = id;
+		this.userName = userName;
+	}
+	
 	public int getId() {
 		return id;
 	}

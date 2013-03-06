@@ -10,7 +10,7 @@ public class MessageRequestObj implements Serializable {
 
 	private Integer targetId;
 	private String targetType;
-	private Integer userId;
+	private Integer fromUserId;
 	private String startTime;
 	private String endTime;
 	private String title;
@@ -32,12 +32,12 @@ public class MessageRequestObj implements Serializable {
 		this.targetType = targetType;
 	}
 	
-	public Integer getUserId() {
-		return userId;
+	public Integer getFromUserId() {
+		return fromUserId;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setFromUserId(Integer fromUserId) {
+		this.fromUserId = fromUserId;
 	}
 
 	public String getStartTime() {
