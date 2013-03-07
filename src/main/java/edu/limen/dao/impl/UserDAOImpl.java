@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import edu.limen.dao.IUserDAO;
 import edu.limen.model.pojo.User;
+import edu.limen.utility.constant.Constants;
 
 @Repository
 public class UserDAOImpl implements IUserDAO {
@@ -85,22 +86,30 @@ public class UserDAOImpl implements IUserDAO {
 			return sessionFactory.getCurrentSession().createQuery(
 					"select new User(u.id, u.userName) from User as u where u.id in " +
 							"(select ug.userDetail.id from UserGrouping as ug " +
-							"where ug.status in (2,4,8) " +
+							"where ug.status in (:statusMember, :statusPMember, :statusAdmin) " +
 							"and (ug.group.id in " +
 									"(select g1.id from Group as g1 " +
-									"where g1.status in (3,5) " +
+									"where g1.status in (:statusAllCanSeeMemberList,:statusAllCanSeeAllMemberListAndEvent) " +
 									"AND g1.name like :groupName)" +
 								" OR ug.group.id in " +
 									"(select ug3.group.id from UserGrouping as ug3 " +
 									"where ug3.userDetail.id = :uid " +
 									"and ug3.group.id in " +
 										"(select g2.id from Group as g2 " +
-										"where g2.status = 1 " +
+										"where g2.status = :statusOnlyMemberCanSeeList " +
 										"AND g2.name like :groupName" +
 										")" +
 									")" +
 								")" +
-							")").setInteger("uid",userId).setString("groupName","%"+groupName+"%").list();
+							")").setInteger("uid",userId)
+							.setString("groupName","%"+groupName+"%")
+							.setByte("statusMember",Constants.USER_GROUPING_STATUS_FRIEND)
+							.setByte("statusPMember",Constants.USER_GROUPING_STATUS_NOT_AVAILABLE_IN_FRIEND_LIST)
+							.setByte("statusAdmin",Constants.USER_GROUPING_STATUS_FRIEND_LIST_OWNER)
+							.setByte("statusAllCanSeeMemberList",(byte) (Constants.GROUPING_STATUS_ANYONE_CAN_SEE_MEMBER_LIST+Constants.GROUPING_STATUS_ACTIVE))
+							.setByte("statusAllCanSeeAllMemberListAndEvent",(byte) (Constants.GROUPING_STATUS_ANYONE_CAN_SEE_MEMBER_LIST_AND_EVENT+Constants.GROUPING_STATUS_ACTIVE))
+							.setByte("statusOnlyMemberCanSeeList", Constants.GROUPING_STATUS_ACTIVE)
+							.list();
 		}
 		return null;
 	}
@@ -111,7 +120,16 @@ public class UserDAOImpl implements IUserDAO {
 		if (groupId != null && userId != null) {
 			return sessionFactory.getCurrentSession().createQuery(
 					"from User as u where u.id in " +
-							"(select ug.userDetail.id from UserGrouping as ug where ug.group.id = (select ug1.group.id from UserGrouping ug1 where ug1.status = 8 and ug1.group.id = :groupId and ug1.userID = :uid))").setInteger("uid",userId).setInteger("groupId",groupId).list();
+							"(select ug.userDetail.id from UserGrouping as ug " +
+								"where ug.group.id = " +
+									"(select ug1.group.id from UserGrouping ug1 " +
+										"where ug1.status = :statusOwner " +
+										"and ug1.group.id = :groupId " +
+										"and ug1.userID = :uid" +
+									")" +
+							")").setInteger("uid",userId)
+							.setByte("statusOwner",Constants.USER_GROUPING_STATUS_FRIEND_LIST_OWNER)
+							.setInteger("groupId",groupId).list();
 		}
 		return null;
 		

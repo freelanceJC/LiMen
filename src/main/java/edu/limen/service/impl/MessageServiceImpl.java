@@ -15,6 +15,7 @@ import edu.limen.model.pojo.UserGrouping;
 import edu.limen.model.pojo.UserMessage;
 import edu.limen.service.IGroupService;
 import edu.limen.service.IMessageService;
+import edu.limen.utility.constant.Constants;
 
 @Service
 public class MessageServiceImpl implements IMessageService{
@@ -41,8 +42,8 @@ public class MessageServiceImpl implements IMessageService{
 		}
 		Integer senderFdListId = senderFdListUserGrouping.getGroup().getUid();
 		byte receiverStatus = userGroupingDao.getUserGroupingByGroupingIdAndUserId(senderFdListId, toUserId).getStatus();
-		byte invitedToBeFriendStatus = new Integer(1).byteValue();
-		if (receiverStatus == invitedToBeFriendStatus) {
+		
+		if (receiverStatus == Constants.USER_GROUPING_STATUS_AWAITING_ACCEPTANCE) {
 			return true;
 		}
 		return false;
