@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import edu.limen.dao.IUserGroupingDAO;
 import edu.limen.model.pojo.UserGrouping;
+import edu.limen.utility.constant.Constants;
 @Repository
 public class UserGroupingDAOImpl implements IUserGroupingDAO {
 
@@ -18,13 +19,15 @@ public class UserGroupingDAOImpl implements IUserGroupingDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public UserGrouping listFriendListGroup(Integer userId) {
+		System.out.println("123: "+Constants.GROUPING_STATUS_ACTIVE + ":" +  Constants.GROUPING_STATUS_FRIEND_LIST);
 		List<UserGrouping> userGrouping = sessionFactory.getCurrentSession().createQuery("from UserGrouping ug " +
 				"where ug.userDetail.id = :uid " +
-				"and mod(ug.status, 8) = 0" +
-				"and ug.group.status = 129 ")
-				//"and mod(ug.group.status, 128) = 0 " +
-				//"and mod(ug.group.status, 2) = 1")
-				.setInteger("uid", userId).list();
+				"and ug.status = :onwerStatus " +
+				"and ug.group.status = :groupStatus ")
+				.setInteger("uid", userId)
+				.setByte("onwerStatus", Constants.USER_GROUPING_STATUS_FRIEND_LIST_OWNER)
+				.setInteger("groupStatus", Constants.GROUPING_STATUS_ACTIVE + Constants.GROUPING_STATUS_FRIEND_LIST)
+				.list();
 		return userGrouping.isEmpty() ? null : userGrouping.get(0);
 	}
 	

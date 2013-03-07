@@ -18,6 +18,7 @@ import edu.limen.model.pojo.Group;
 import edu.limen.model.pojo.UserDetail;
 import edu.limen.model.pojo.UserGrouping;
 import edu.limen.service.IFanService;
+import edu.limen.utility.constant.Constants;
 
 @Service
 public class FanServiceImpl implements IFanService {
@@ -68,14 +69,14 @@ public class FanServiceImpl implements IFanService {
 		UserGrouping userGrouping = new UserGrouping();
 		Group group = new Group();
 		group.setName("Friend List");
-		group.setStatus(129);
+		group.setStatus(Constants.GROUPING_STATUS_ACTIVE + Constants.GROUPING_STATUS_FRIEND_LIST);
 		group.setCreateTime(new Timestamp((new Date()).getTime()));
 		groupDao.addGroup(group);
 		
 		userGrouping.setGroup(group);
 		userGrouping.setUserDetail(user);
 		userGrouping.setCreateTime(new Timestamp((new Date()).getTime()));
-		userGrouping.setStatus((byte)8);
+		userGrouping.setStatus(Constants.USER_GROUPING_STATUS_FRIEND_LIST_OWNER);
 		userGroupingDao.addUserGrouping(userGrouping);
 		return userGrouping;
 	}
@@ -105,7 +106,9 @@ public class FanServiceImpl implements IFanService {
 			if (fanUserDetail != null) {
 				// add new fan into owner list
 				if (userGroupingDao.getUserGroupingByGroupingIdAndUserId(userGrouping.getGroup().getUid(), newFanId) == null) {
-					this.addFriendMember(userGrouping.getGroup(), fanUserDetail, (byte)1);
+					this.addFriendMember(userGrouping.getGroup(),
+							fanUserDetail,
+							Constants.USER_GROUPING_STATUS_INVITED_TO_BE_FRIEND);
 				}
 								
 				UserGrouping fanGroupFriendList = userGroupingDao.listFriendListGroup(newFanId);
@@ -113,9 +116,11 @@ public class FanServiceImpl implements IFanService {
 					// if frield list is null, create an new one for him
 					fanGroupFriendList = this.createFriendListGroupWithOwnerUserId(fanUserDetail);
 				}
-				//update the fan user grouping status to byte 1 - invited
+				//update the fan user grouping status
 				if (userGroupingDao.getUserGroupingByGroupingIdAndUserId(fanGroupFriendList.getGroup().getUid(), userId) == null) {
-					this.addFriendMember(fanGroupFriendList.getGroup(), creatorUserDetail, (byte)0);
+					this.addFriendMember(fanGroupFriendList.getGroup(),
+							creatorUserDetail,
+							Constants.USER_GROUPING_STATUS_AWAITING_ACCEPTANCE);
 				}				
 			}
 			
