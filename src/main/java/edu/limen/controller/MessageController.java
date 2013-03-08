@@ -1,33 +1,17 @@
 package edu.limen.controller;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.codehaus.jackson.JsonGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.limen.model.json.JsonRequestObj;
+import com.google.gson.Gson;
+
 import edu.limen.model.json.MessageRequestObj;
 import edu.limen.model.json.MessageResponseObj;
-import edu.limen.model.json.UserFanListItem;
-import edu.limen.model.json.UserFanListResponse;
-import edu.limen.model.pojo.User;
-import edu.limen.model.pojo.UserDetail;
-import edu.limen.model.pojo.UserGrouping;
 import edu.limen.model.pojo.UserMessage;
-import edu.limen.service.IFanService;
-import edu.limen.service.IGroupService;
 import edu.limen.service.IMessageService;
 import edu.limen.service.IUserService;
 
@@ -44,8 +28,10 @@ public class MessageController {
 	
 	@RequestMapping(value="/sendAddFriendMessage", method = RequestMethod.POST)
 	@ResponseBody
-	public MessageResponseObj send(@RequestBody MessageRequestObj msgRequestObj)
-	{
+	public MessageResponseObj send(@RequestParam(value = "json", required = true) String json) {
+		Gson gson = new Gson();
+		MessageRequestObj msgRequestObj = gson.fromJson(json, MessageRequestObj.class);
+
 		MessageResponseObj response = new MessageResponseObj();
 		Integer fromUserId = msgRequestObj.getFromUserId();
 		Integer toUserId = msgRequestObj.getTargetId();

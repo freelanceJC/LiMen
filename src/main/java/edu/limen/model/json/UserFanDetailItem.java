@@ -14,6 +14,8 @@ public class UserFanDetailItem implements Serializable {
 	private String realName;
 	private Date dateOfBirth;
 	private String photo;
+	private String className;
+	private String email;
 	
 	public Integer getFanUserId() {
 		return fanUserId;
@@ -39,7 +41,17 @@ public class UserFanDetailItem implements Serializable {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-	
-	
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 }

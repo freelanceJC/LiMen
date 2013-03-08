@@ -59,6 +59,8 @@ public class FanServiceImpl implements IFanService {
 			userFanDetailItem.setRealName(userDetail.getRealNameString());
 			userFanDetailItem.setDateOfBirth(userDetail.getDateOfBirth());
 			userFanDetailItem.setPhoto(userDetail.getPhoto());
+			userFanDetailItem.setClassName(userDetail.getClassName());
+			userFanDetailItem.setEmail(userDetail.getEmailAddress());
 		} else {
 			userFanDetailItem = null;
 		}

@@ -2,18 +2,12 @@ package edu.limen.model.pojo;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -58,28 +52,8 @@ public class UserDetail {
 	@Column(name="STATUS", nullable=false)
 	private byte status = 1;
 	
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "user_grouping",
-//            joinColumns = { @JoinColumn(name = "user_id") },
-//            inverseJoinColumns = @JoinColumn(name = "grouping_id")
-//    )
-//    private List<Group> userGroup;
-	
-//	public List<UserDetail> getUserFanList() {
-//		return userFanList;
-//	}
-//
-//	public void setUserFanList(List<UserDetail> userFanList) {
-//		this.userFanList = userFanList;
-//	}
-//	
-//	public void addUserFan(UserDetail userDetail) {
-//		if (this.userFanList == null) {
-//			this.userFanList = new ArrayList<UserDetail>();
-//		}
-//		this.userFanList.add(userDetail);
-//	}
+	@Column(name="CLASS_NAME")
+	private String className;
 
 	public int getId() {
 		return id;
@@ -175,5 +149,13 @@ public class UserDetail {
 
 	public void setStatus(byte status) {
 		this.status = status;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 }

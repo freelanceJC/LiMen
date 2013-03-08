@@ -1,27 +1,19 @@
 package edu.limen.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 import edu.limen.model.json.JsonRequestObj;
-import edu.limen.model.json.UserFanListItem;
-import edu.limen.model.json.UserFanListResponse;
 import edu.limen.model.pojo.User;
-import edu.limen.model.pojo.UserDetail;
-import edu.limen.service.IFanService;
-import edu.limen.service.IGroupService;
 import edu.limen.service.IUserService;
 
 
@@ -33,8 +25,10 @@ public class UserController {
 	
 	@RequestMapping(value="/search", method = RequestMethod.POST)
 	@ResponseBody
-	public List<User> search(@RequestBody JsonRequestObj requestObj)
-	{
+	public List<User> search(@RequestParam(value = "json", required = true) String json) {
+		Gson gson = new Gson();
+		JsonRequestObj requestObj = gson.fromJson(json, JsonRequestObj.class);
+	
 		String searchType = requestObj.getType();
 		String searchInput = requestObj.getKeyword();
 		Integer userId = requestObj.getUserId();

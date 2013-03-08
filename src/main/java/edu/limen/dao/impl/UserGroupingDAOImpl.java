@@ -19,7 +19,6 @@ public class UserGroupingDAOImpl implements IUserGroupingDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public UserGrouping listFriendListGroup(Integer userId) {
-		System.out.println("123: "+Constants.GROUPING_STATUS_ACTIVE + ":" +  Constants.GROUPING_STATUS_FRIEND_LIST);
 		List<UserGrouping> userGrouping = sessionFactory.getCurrentSession().createQuery("from UserGrouping ug " +
 				"where ug.userDetail.id = :uid " +
 				"and ug.status = :onwerStatus " +
